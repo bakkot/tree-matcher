@@ -1,0 +1,15 @@
+{
+  "name": "tree-matcher",
+  "version": "1.0.0",
+  "description": "Match objects based on structural equality",
+  "repository": "https://github.com/bakkot/tree-matcher",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest  -c '{ \"testRegex\": \"/test/.*\\\\.js\" }'"
+  },
+  "author": "Kevin Gibbons",
+  "license": "ISC",
+  "devDependencies": {
+    "jest": "^22.4.3"
+  }
+}
