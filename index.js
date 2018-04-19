@@ -20,7 +20,7 @@ module.exports = function treeMatcher(matcher, val) {
   }
 
   if (!cache.has(matcher)) {
-    cache.set(matcher, new Map);
+    cache.set(matcher, new WeakMap);
   }
   const map = cache.get(matcher);
   if (map.has(val)) {

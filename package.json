@@ -1,6 +1,6 @@
 {
   "name": "tree-matcher",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Match objects based on structural equality",
   "repository": "https://github.com/bakkot/tree-matcher",
   "main": "index.js",
