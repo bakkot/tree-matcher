@@ -61,13 +61,13 @@ A matcher _matches_ a value as follows:
 A primitive `p` matches a value `x` if `Object.is(p, x)` is true. For example, `null` matches `null`, `NaN` matches `NaN`, `1` does not match `'1'`, and `0` does not match `-0`.
 
 ### Functions
-A function `f` matches a value `x` if `f(x)` is truthy. For example, `[]` matches `Array.isArray`.
+A function `f` matches a value `x` if `f(x)` is truthy. For example, `Array.isArray` matches `[]`.
 
 ### RegExps
-A regex `r` if `x` matches a value `x` if `x` is a regex and `x` has the same `.source` and `.flags` as `r`.
+A regex `r` matches a value `x` if `x` is a regex and `x` has the same `.source` and `.flags` as `r`.
 
 ### Arrays
 An array `a` matches a value `x` if `x` is an array, the two are of the same length, and for every non-hole index `i` in `a`, `a[i]` matches `x[i]`. Holes in the matcher array match anything; holes in `x` match `undefined`. For example, `[1]` matches `[1]`, `[1,,]` matches `[1,2]`, `[1,void 0]` matches `[1,,]`, `[1]` does not match `[1, 2]`, and `[1, 2]` does not match `[1]`.
 
 ### Objects
-Any other object `o` matches a value `x` if `x` is an object if for every key `k` in `o`, `x[k]` matches `o[k]`. For example, `{ a: { b: 0 }, c: 1 }` matches `{ a: { b: 0 } }`, and `{ a: { b: 0 } }` does not match `{ a: { b: 0 }, c: 1 }`.
+Any other object `o` matches a value `x` if `x` is an object if for every enumerable own key `k` in `o`, `o[k]` matches `x[k]`. For example, `{ a: { b: 0 }, c: 1 }` matches `{ a: { b: 0 } }`, and `{ a: { b: 0 } }` does not match `{ a: { b: 0 }, c: 1 }`.
