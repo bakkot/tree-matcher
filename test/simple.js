@@ -1,62 +1,78 @@
 'use strict';
 
+const assert = require('assert');
+
 const tm = require('..');
 
 test('primitives', () => {
-  expect(tm(0, 0));
-  expect(tm(0, new Number(0)));
-  expect(tm('a', 'a'));
-  expect(tm(true, true));
-  expect(tm(null, null));
-  expect(tm(NaN, NaN));
-  expect(!tm(0, -0));
-  expect(!tm(1, '1'));
+  assert(tm(0, 0));
+  assert(!tm(0, new Number(0)));
+  assert(tm('', ''));
+  assert(tm('a', 'a'));
+  assert(!tm('a', 'A'));
+  assert(tm(true, true));
+  assert(tm(null, null));
+  assert(tm(NaN, NaN));
+  assert(!tm(0, -0));
+  assert(!tm(1, '1'));
 });
 
 test('functions', () => {
-  expect(tm([], Array.isArray));
-  expect(tm('asdf', f => f.length === 4));
-  expect(!tm('asdf', f => f.length === 5));
+  assert(tm(Array.isArray, []));
+  assert(tm(f => f.length === 4, 'asdf'));
+  assert(!tm(f => f.length === 5, 'asdf'));
 });
 
 test('regex', () => {
-  expect(tm(/a/ig, /a/gi));
-  expect(!tm(/a/ig, /a/g));
-  expect(!tm(/a/ig, /b/ig));
+  assert(tm(/a/ig, /a/gi));
+  assert(!tm(/a/ig, /a/g));
+  assert(!tm(/a/ig, /b/ig));
 });
 
 test('array', () => {
-  expect(tm([], []));
-  expect(tm([0, []], [0, []]));
-  expect(tm([1], [1]));
-  expect(tm([1,2], [1,,]));
-  expect(tm([1,,], [1, void 0]));
-  expect(!tm([1,2], [1]));
-  expect(!tm([1], [1,2]));
+  assert(tm([], []));
+  assert(tm([0, []], [0, []]));
+  assert(tm([1], [1]));
+  assert(tm([1,,], [1,2]));
+  assert(tm([1,void 0], [1,,]));
+  assert(!tm([1], [1,2]));
+  assert(!tm([1,2], [1]));
 });
 
 test('object', () => {
-  expect(tm({}, {}));
-  expect(!tm(null, {}));
-  expect(!tm({ a: 0 }, null));
-  expect(tm({ a: { b: 0 }, c: 1 }, { a: { b: 0 }}));
-  expect(!tm({ a: { b: 0 } }, { a: { b: 0 }, c: 1}));
+  assert(tm({}, {}));
+  assert(!tm({}, null));
+  assert(!tm({ a: 0 }, null));
+  assert(tm({ a: 0 }, { a: 0, b: 1 }))
+  assert(!tm({ a: 0, b: 1 }, { a: 0 }))
+  assert(tm({ a: { b: 0 } }, { a: { b: 0 }, c: 1 }));
+  assert(!tm({ a: { b: 0 }, c: 1 }, { a: { b: 0 } }));
 });
 
 test('combinations', () => {
-  expect(tm({ a: [1, 2, [3, 4, 5]]}, { a: [1, 2, a => a.every(v => v < 6)]}));
-  expect(!tm({ a: [1, 2, [3, 4, 6]]}, { a: [1, 2, a => a.every(v => v < 6)]}));
+  assert(tm({ a: [1, 2, a => a.every(v => v < 6)]}, { a: [1, 2, [3, 4, 5]]}));
+  assert(!tm({ a: [1, 2, a => a.every(v => v < 6)]}, { a: [1, 2, [3, 4, 6]]}));
+});
+
+test('bigint', () => {
+  if (typeof BigInt !== 'function') {
+    return;
+  }
+  assert(tm(BigInt('0'), BigInt('0')));
+  assert(!tm(BigInt('0'), BigInt('1')));
+  assert(!tm(BigInt('0'), 0));
+  assert(!tm(0, BigInt('0')));
 });
 
 test('cycles', () => {
-  let a = [];
-  a[0] = a;
-
   let m = [];
   m[0] = m;
 
-  expect(tm(a, m));
-  expect(!tm(a, [[]]));
+  let x = [];
+  x[0] = x;
+
+  assert(tm(m, x));
+  assert(!tm(m, [[]]));
 });
 
 test('example', () => {
@@ -92,6 +108,6 @@ test('example', () => {
     },
   };
 
-  expect(tm(matcher, treeOne));
-  expect(!tm(matcher, treeOne));
+  assert(tm(matcher, treeOne));
+  assert(!tm(matcher, treeTwo));
 })

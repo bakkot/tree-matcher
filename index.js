@@ -3,7 +3,7 @@
 const cache = new WeakMap; // object -> value -> boolean
 
 module.exports = function treeMatcher(matcher, val) {
-  if (typeof matcher === 'string' || typeof matcher === 'number' || typeof matcher === 'boolean' || typeof matcher === 'undefined' || typeof matcher === 'symbol' || matcher === null) {
+  if (typeof matcher === 'string' || typeof matcher === 'number' || typeof matcher === 'boolean' || typeof matcher === 'undefined' || typeof matcher === 'symbol' || typeof matcher === 'bigint' || matcher === null) {
     return Object.is(val, matcher);
   }
   if (typeof matcher === 'function') {
@@ -13,7 +13,7 @@ module.exports = function treeMatcher(matcher, val) {
     return val instanceof RegExp && val.source === matcher.source && val.flags === matcher.flags;
   }
   if (typeof matcher !== 'object') {
-    return false; // future-proof against BigInts or whatever
+    return false; // future-proof against new types
   }
   if (typeof val !== 'object' || val === null) {
     return false;
