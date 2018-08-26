@@ -1,8 +1,13 @@
 'use strict';
 
-const cache = new WeakMap; // object -> value -> boolean
-
 module.exports = function treeMatcher(matcher, val) {
+  return treeMatcherInternal(matcher, val, new WeakMap);
+};
+
+
+// cache is of type `matcher object -> value -> boolean`
+// and is used to handle cycles
+function treeMatcherInternal(matcher, val, cache) {
   if (typeof matcher === 'string' || typeof matcher === 'number' || typeof matcher === 'boolean' || typeof matcher === 'undefined' || typeof matcher === 'symbol' || typeof matcher === 'bigint' || matcher === null) {
     return Object.is(val, matcher);
   }
@@ -28,8 +33,8 @@ module.exports = function treeMatcher(matcher, val) {
   }
   map.set(val, true);
   const res = Array.isArray(matcher)
-    ? Array.isArray(val) && val.length === matcher.length && matcher.every((v, i) => treeMatcher(v, val[i]))
-    : Object.entries(matcher).every(([k, v]) => treeMatcher(v, val[k]));
+    ? Array.isArray(val) && val.length === matcher.length && matcher.every((v, i) => treeMatcherInternal(v, val[i], cache))
+    : Object.entries(matcher).every(([k, v]) => treeMatcherInternal(v, val[k], cache));
   map.set(val, res);
 
   return res;
