@@ -67,7 +67,7 @@ A function `f` matches a value `x` if `f(x)` is truthy. For example, `Array.isAr
 A regex `r` matches a value `x` if `x` is a regex and `x` has the same `.source` and `.flags` as `r`.
 
 ### Arrays
-An array `a` matches a value `x` if `x` is an array, the two are of the same length, and for every non-hole index `i` in `a`, `a[i]` matches `x[i]`. Holes in the matcher array match anything; holes in `x` match `undefined`. For example, `[1]` matches `[1]`, `[1,,]` matches `[1,2]`, `[1,void 0]` matches `[1,,]`, `[1]` does not match `[1, 2]`, and `[1, 2]` does not match `[1]`.
+An array `a` matches a value `x` if `x` is an array, the two are of the same length, and for every non-hole index `i` in `a`, `a[i]` matches `x[i]`. Holes in the matcher array match anything; holes in `x` are matched by `undefined`. For example, `[1]` matches `[1]`, `[1,,]` matches `[1,2]`, `[1,void 0]` matches `[1,,]`, `[1]` does not match `[1, 2]`, and `[1, 2]` does not match `[1]`.
 
 ### Objects
-Any other object `o` matches a value `x` if `x` is an object if for every enumerable own key `k` in `o`, `o[k]` matches `x[k]`. For example, `{ a: { b: 0 }, c: 1 }` matches `{ a: { b: 0 } }`, and `{ a: { b: 0 } }` does not match `{ a: { b: 0 }, c: 1 }`.
+Any other object `o` matches a value `x` if `x` is an object and for every enumerable own key `k` in `o`, `o[k]` matches `x[k]`. For example, `{ a: { b: 0 }, c: 1 }` matches `{ a: { b: 0 } }`, and `{ a: { b: 0 } }` does not match `{ a: { b: 0 }, c: 1 }`.
