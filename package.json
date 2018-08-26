@@ -10,6 +10,6 @@
   "author": "Kevin Gibbons",
   "license": "ISC",
   "devDependencies": {
-    "jest": "^22.4.3"
+    "jest": "^23.5.0"
   }
 }
